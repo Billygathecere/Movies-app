@@ -1,115 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <!-- Metadata for the browser -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Netflix Clone - Beginner</title>
-    
+
     <!-- Link to our CSS file for styling -->
     <link rel="stylesheet" href="home.css">
-    
+
     <!-- Importing a modern font from Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 </head>
+
 <body>
-    
+
     <!-- The Navigation/Header section -->
-    <header>
-        <div class="logo">NETFLIX</div>
+    <header id="main-header">
+        <div class="logo" id="site-logo">NETFLIX</div>
+        <nav class="nav-links">
+            <a href="home.html" class="nav-item active" id="nav-home">Home</a>
+            <a href="mylist.html" class="nav-item" id="nav-mylist">My List</a>
+        </nav>
         <div class="search-bar">
-            <!-- Input field for searching movies -->
-            <input type="text" placeholder="Search for a movie...">
-            <button>Search</button>
+            <input type="text" id="search-input" placeholder="Search for a movie...">
+            <button id="search-button">Search</button>
         </div>
     </header>
 
     <!-- The main layout area for movies -->
-    <main class="movie-container">
-        
-        <!-- Movie Card 1 -->
-        <div class="movie-card">
-            <!-- Using actual TMDB poster links -->
-            <img src="Images/stranger_things.jpg" alt="Stranger Things Poster" class="poster">
-            <div class="movie-info">
-                <h3>Stranger Things</h3>
-                <span class="rating">98% Match</span>
-            </div>
-            <!-- This overview is hidden by default and shows on hover -->
-            <div class="overview">
-                <h4>Overview</h4>
-                <p>When a young boy vanishes, a small town uncovers a mystery involving secret experiments, terrifying supernatural forces and one strange little girl.</p>
-            </div>
-        </div>
-
-        <!-- Movie Card 2 -->
-        <div class="movie-card">
-            <img src="Images/squid_game.jpg" alt="Squid Game Poster" class="poster">
-            <div class="movie-info">
-                <h3>Squid Game</h3>
-                <span class="rating">96% Match</span>
-            </div>
-            <div class="overview">
-                <h4>Overview</h4>
-                <p>Hundreds of cash-strapped players accept a strange invitation to compete in children's games. Inside, a tempting prize awaits with deadly high stakes.</p>
-            </div>
-        </div>
-
-        <!-- Movie Card 3 -->
-        <div class="movie-card">
-            <img src="Images/witcher.jpg" alt="The Witcher Poster" class="poster">
-            <div class="movie-info">
-                <h3>The Witcher</h3>
-                <span class="rating">91% Match</span>
-            </div>
-            <div class="overview">
-                <h4>Overview</h4>
-                <p>Geralt of Rivia, a mutated monster-hunter for hire, journeys toward his destiny in a turbulent world where people often prove more wicked than beasts.</p>
-            </div>
-        </div>
-
-        <!-- Movie Card 4 -->
-        <div class="movie-card">
-            <img src="Images/money_heist.jpg" alt="Money Heist Poster" class="poster">
-            <div class="movie-info">
-                <h3>Money Heist</h3>
-                <span class="rating">94% Match</span>
-            </div>
-            <div class="overview">
-                <h4>Overview</h4>
-                <p>To carry out the biggest heist in history, a mysterious man called The Professor recruits a band of eight robbers who have a single characteristic: none of them has anything to lose.</p>
-            </div>
-        </div>
-
-        <!-- Movie Card 5 -->
-        <div class="movie-card">
-            <img src="Images/wednesday.jpg" alt="Wednesday Poster" class="poster">
-            <div class="movie-info">
-                <h3>Wednesday</h3>
-                <span class="rating">97% Match</span>
-            </div>
-            <div class="overview">
-                <h4>Overview</h4>
-                <p>Wednesday Addams is sent to Nevermore Academy, a bizarre boarding school where she attempts to master her psychic powers, stop a monstrous killing spree and solve a supernatural mystery.</p>
-            </div>
-        </div>
-
-        <!-- Movie Card 6 -->
-        <div class="movie-card">
-            <img src="Images/black_mirror.jpg" alt="Black Mirror Poster" class="poster">
-            <div class="movie-info">
-                <h3>Black Mirror</h3>
-                <span class="rating">89% Match</span>
-            </div>
-            <div class="overview">
-                <h4>Overview</h4>
-                <p>An anthology series exploring a twisted, high-tech multiverse where humanity's greatest innovations and darkest instincts collide.</p>
-            </div>
-        </div>
-
+    <main class="movie-container" id="movie-grid">
+        <!-- Movies will be loaded here dynamically from home.js -->
     </main>
+
 
     <!-- Connect our JavaScript file -->
     <script src="home.js"></script>
 </body>
+
 </html>

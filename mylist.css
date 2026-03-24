@@ -1,0 +1,79 @@
+/* =========================================================================
+   MY LIST SPECIFIC STYLES
+   Extends home.css design system
+   ========================================================================= */
+
+.list-container {
+    padding: 2rem 4%;
+    min-height: 80vh;
+}
+
+.page-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 2.5rem;
+    color: var(--text-primary);
+    position: relative;
+    padding-left: 0.5rem;
+}
+
+.page-title::before {
+    content: '';
+    position: absolute;
+    left: -10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 100%;
+    background-color: var(--accent-color);
+    box-shadow: 0 0 15px var(--accent-color);
+}
+
+.movie-container#mylist-grid {
+    padding-top: 0; /* Already handled by list-container */
+}
+
+/* Specific styling for the remove button */
+.remove-list-btn {
+    width: 100%;
+    padding: 0.8rem;
+    border-radius: var(--btn-radius);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    background-color: transparent;
+    color: var(--text-secondary);
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--transition-standard);
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    margin-top: auto;
+}
+
+.remove-list-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: #fff;
+    color: #fff;
+}
+
+#empty-list-message a:hover {
+    text-decoration: underline;
+    opacity: 0.8;
+}
+
+/* Customizing the header active state for mylist */
+#nav-mylist.active::after {
+    display: block;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .page-title {
+        font-size: 1.8rem;
+        text-align: center;
+        padding-left: 0;
+    }
+    .page-title::before {
+        display: none;
+    }
+}

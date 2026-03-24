@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My List - Netflix Clone</title>
+    <link rel="stylesheet" href="home.css">
+    <link rel="stylesheet" href="mylist.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    
+    <header id="main-header">
+        <div class="logo" id="site-logo">NETFLIX</div>
+        <nav class="nav-links">
+            <a href="home.html" class="nav-item" id="nav-home">Home</a>
+            <a href="mylist.html" class="nav-item active" id="nav-mylist">My List</a>
+        </nav>
+        <div class="search-bar">
+            <input type="text" id="search-input" placeholder="Search for a movie...">
+            <button id="search-button">Search</button>
+        </div>
+    </header>
+
+    <main class="list-container">
+        <h1 class="page-title">My List</h1>
+        
+        <div class="movie-container" id="mylist-grid">
+            <!-- Movies from your list will appear here dynamically -->
+        </div>
+
+
+        <div id="empty-list-message" style="display: none; text-align: center; margin-top: 5rem;">
+            <p style="color: var(--text-secondary); font-size: 1.2rem;">Your list is empty.</p>
+            <a href="home.html" style="color: var(--accent-color); text-decoration: none; font-weight: 700; margin-top: 1rem; display: inline-block;">Browse Movies</a>
+        </div>
+    </main>
+    <script src="home.js"></script>
+</body>
+</html>
