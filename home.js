@@ -1,149 +1,159 @@
-const movies = [
-    {
-        moviename: "stranger things",
-        rating: "98%",
-        overview: "When a young boy vanishes, a small town uncovers a mystery involving secret experiments, terrifying supernatural forces and one strange little girl.",
-        image: "Images/stranger_things.jpg"
-    },
-    {
-        moviename: "squid game",
-        rating: "96%",
-        overview: "Hundreds of cash-strapped players accept a strange invitation to compete in children's games. Inside, a tempting prize awaits with deadly high stakes.",
-        image: "Images/squid_game.jpg"
-    },
-    {
-        moviename: "the witcher",
-        rating: "91%",
-        overview: "Geralt of Rivia, a mutated monster-hunter for hire, journeys toward his destiny in a turbulent world where people often prove more wicked than beasts.",
-        image: "Images/witcher.jpg"
-    },
-    {
-        moviename: "money heist",
-        rating: "94%",
-        overview: "To carry out the biggest heist in history, a mysterious man called The Professor recruits a band of eight robbers who have a single characteristic: none of them has anything to lose.",
-        image: "Images/money_heist.jpg"
-    },
-    {
-        moviename: "wednesday",
-        rating: "97%",
-        overview: "Wednesday Addams is sent to Nevermore Academy, a bizarre boarding school where she attempts to master her psychic powers, stop a monstrous killing spree and solve a supernatural mystery.",
-        image: "Images/wednesday.jpg"
-    },
-    {
-        moviename: "black mirror",
-        rating: "89%",
-        overview: "An anthology series exploring a twisted, high-tech multiverse where humanity's greatest innovations and darkest instincts collide.",
-        image: "Images/black_mirror.jpg"
-    },
-    {
-        moviename: "the flash",
-        rating: "89%",
-        overview: "An anthology series exploring a twisted, high-tech multiverse where humanity's greatest innovations and darkest instincts collide.",
-        image: "Images/The flash.jpg"
-    },
-    {
-        moviename: "shelter the movie",
-        rating: "89%",
-        overview: "An anthology series exploring a twisted, high-tech multiverse where humanity's greatest innovations and darkest instincts collide.",
-        image: "Images/shelter the movie.jpg"
-    }];
+// 1. Configuration & Selectors
+const API_KEY = '25c10fd18d34fdfa2ba12986166c76fa'; // Replace with your real key
+const BASE_URL = 'https://api.themoviedb.org/3';
+const IMAGE_URL = 'https://image.tmdb.org/t/p/w500';
 
 const movieContainer = document.querySelector(".movie-container");
+const searchInput = document.getElementById("search-input");
+const searchButton = document.getElementById("search-button");
 const mylist = document.getElementById("mylist-grid");
 const emptyListMessage = document.getElementById("empty-list-message");
 
-// Populate the Home page movies
-if (movieContainer && movieContainer.id !== "mylist-grid") {
+let savedlist = JSON.parse(localStorage.getItem("mylist")) || [];
+
+// 2. Fetch Movies from TMDB
+async function fetchMovies() {
+    try {
+        const response = await fetch(`${BASE_URL}/trending/movie/day?api_key=${API_KEY}`);
+        const data = await response.json();
+        renderHomeMovies(data.results);
+    } catch (error) {
+        console.error("Error fetching movies:", error);
+    }
+}
+
+async function fetchSearchMovies(query) {
+    const trimmedQuery = query.trim();
+    if (!trimmedQuery) {
+        fetchMovies();
+        return;
+    }
+
+    try {
+        const response = await fetch(`${BASE_URL}/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(trimmedQuery)}`);
+        const data = await response.json();
+        renderHomeMovies(data.results);
+    } catch (error) {
+        console.error("Error searching movies:", error);
+    }
+}
+
+if (searchButton) {
+    searchButton.addEventListener("click", () => fetchSearchMovies(searchInput.value));
+}
+
+if (searchInput) {
+    searchInput.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+            fetchSearchMovies(searchInput.value);
+        }
+    });
+}
+
+// 3. Render Home Page Movies
+function renderHomeMovies(movies) {
+    if (!movieContainer || movieContainer.id === "mylist-grid") return;
+
+    movieContainer.innerHTML = ""; // Clear loader if any
+
+    if (!movies || movies.length === 0) {
+        movieContainer.innerHTML = `<div class="no-results">No movies found. Try another search.</div>`;
+        return;
+    }
+
     movies.forEach(movie => {
         const movieCard = document.createElement("div");
         movieCard.classList.add("movie-card");
+        
+        // TMDB uses 'title' for movies and 'name' for TV shows
+        const title = movie.title || movie.name;
+        const rating = Math.round(movie.vote_average * 10); // Convert to %
+        const posterPath = movie.poster_path ? IMAGE_URL + movie.poster_path : 'fallback-image.jpg';
+
         movieCard.innerHTML = `
-            <img src="${movie.image}" alt="${movie.moviename} Poster" class="poster">
+            <img src="${posterPath}" alt="${title} Poster" class="poster">
             <div class="movie-info">
-                <h3>${movie.moviename}</h3>
-                <span class="rating">${movie.rating} Match</span>
+                <h3>${title}</h3>
+                <span class="rating">${rating}% Match</span>
             </div>
             <div class="overview">
                 <h4>Overview</h4>
                 <p>${movie.overview}</p>
-                <!-- Click to call the 'list' function with the movie name -->
-                <button class="add-list-btn" >+ My List</button>
+                <button class="add-list-btn">+ My List</button>
             </div>
         `;
+
+        // Add event listener directly to the button
+        movieCard.querySelector(".add-list-btn").addEventListener("click", () => {
+            addToList({
+                moviename: title,
+                rating: rating + "%",
+                overview: movie.overview,
+                image: posterPath
+            });
+        });
+
         movieContainer.appendChild(movieCard);
     });
 }
 
-let mylistbtn = document.querySelectorAll(".add-list-btn");
-
-let savedlist = JSON.parse(localStorage.getItem("mylist")) || [];
-
-// The "list" function to add a movie to the list grid
-mylistbtn.forEach((btn, index) => {
-    btn.addEventListener("click", () => {
-        // Find the movie data from the array
-        const movie = movies[index];
-
-        const alreadyExists = savedlist.some(m => m.moviename === movie.moviename);
-        if (alreadyExists) {
-            alert("Movie already added to list");
-            return;
-        }
-
-        savedlist.push(movie);
-        store();
-    });
-});
-
-if (mylist && savedlist.length > 0) {
-    // Hide empty message if it's there
-    if (emptyListMessage) emptyListMessage.style.display = "none";
+// 4. Add to List Logic
+const addToList = (movie) => {
+    const alreadyExists = savedlist.some(m => m.moviename === movie.moviename);
     
-    // Create the new card for the My List grid
-    savedlist.forEach(movie => {
-        const card = document.createElement("div");
-        card.classList.add("movie-card");
-        card.innerHTML = `
-            <img src="${movie.image}" alt="${movie.moviename} Poster" class="poster">
-            <div class="movie-info">
-                <h3>${movie.moviename}</h3>
-                <span class="rating">${movie.rating}</span>
-            </div>
-            <div class="overview">
-                <h4>Overview</h4>
-                <p>${movie.overview}</p>
-                <button class="remove-list-btn" onclick="removeCard(this)">Remove from List</button>
-            </div>
-        `;
-        mylist.appendChild(card);
-    });
-} else if (mylist && savedlist.length === 0) {
-    if (emptyListMessage) emptyListMessage.style.display = "block";
-}
-
-// Remove function to remove a card from the grid
-const removeCard = (button) => {
-    const card = button.closest(".movie-card");
-
-    if (card) {
-        const titleElement = card.querySelector("h3");
-        if (titleElement) {
-            savedlist = savedlist.filter(m => m.moviename !== titleElement.innerText);
-            localStorage.setItem("mylist", JSON.stringify(savedlist));
-        }
-        card.remove();
+    if (alreadyExists) {
+        alert("Movie already added to list");
+        return;
     }
-    
-    // If list is empty again, show the message
-    if (mylist && mylist.children.length === 0) {
-        if (emptyListMessage) emptyListMessage.style.display = "block";
-    }
-};
 
-const store = () => {
+    savedlist.push(movie);
     localStorage.setItem("mylist", JSON.stringify(savedlist));
     alert("Movie added to list");
 };
 
+// 5. Render "My List" Page
+const renderMyList = () => {
+    if (!mylist) return;
 
+    if (savedlist.length > 0) {
+        if (emptyListMessage) emptyListMessage.style.display = "none";
+        mylist.innerHTML = "";
 
+        savedlist.forEach(movie => {
+            const card = document.createElement("div");
+            card.classList.add("movie-card");
+            card.innerHTML = `
+                <img src="${movie.image}" alt="${movie.moviename} Poster" class="poster">
+                <div class="movie-info">
+                    <h3>${movie.moviename}</h3>
+                    <span class="rating">${movie.rating}</span>
+                </div>
+                <div class="overview">
+                    <h4>Overview</h4>
+                    <p>${movie.overview}</p>
+                    <button class="remove-list-btn">Remove from List</button>
+                </div>
+            `;
+            
+            card.querySelector(".remove-list-btn").onclick = () => removeCard(card, movie.moviename);
+            mylist.appendChild(card);
+        });
+    } else {
+        if (emptyListMessage) emptyListMessage.style.display = "block";
+    }
+};
+
+// 6. Remove Card Logic
+const removeCard = (cardElement, movieName) => {
+    savedlist = savedlist.filter(m => m.moviename !== movieName);
+    localStorage.setItem("mylist", JSON.stringify(savedlist));
+    cardElement.remove();
+
+    if (savedlist.length === 0 && emptyListMessage) {
+        emptyListMessage.style.display = "block";
+    }
+};
+
+// Initialize
+fetchMovies();
+renderMyList();
